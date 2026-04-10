@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Varios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: black;
+      color: white;
+    }
+
+    header {
+      padding: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .cart-btn {
+      cursor: pointer;
+      background: white;
+      color: black;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .insta-top {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .product {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+    }
+
+    .product img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .view-buttons button {
+      margin: 5px;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sizes button {
+      margin: 5px;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sizes .active {
+      background: white;
+      color: black;
+    }
+
+    .add {
+      background: white;
+      color: black;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .ig-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #E1306C;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .cart {
+      position: fixed;
+      right: -350px;
+      top: 0;
+      width: 300px;
+      height: 100%;
+      background: #111;
+      padding: 20px;
+      transition: 0.3s;
+    }
+
+    .cart.open {
+      right: 0;
+    }
+
+    .item {
+      margin: 10px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .checkout {
+      background: white;
+      color: black;
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Varios</div>
+  <div class="cart-btn" onclick="toggleCart()">Cart (<span id="count">0</span>)</div>
+</header>
+
+<div class="insta-top">
+  <a href="https://www.instagram.com/vari7os/" target="_blank" style="color:white;">
+    @vari7os
+  </a>
+</div>
+
+<div class="container">
+  <div class="product">
+
+    <!-- IMAGE -->
+    <img id="productImage" src="front.png">
+
+    <!-- SWITCH -->
+    <div class="view-buttons">
+      <button onclick="showFront()">Front</button>
+      <button onclick="showBack()">Back</button>
+    </div>
+
+    <h2>Black Boxy Tee</h2>
+    <p>Premium gym + comfort fit</p>
+    <h3>€24.99</h3>
+
+    <!-- SIZES -->
+    <div class="sizes">
+      <button onclick="setSize('S', this)">S</button>
+      <button onclick="setSize('M', this)" class="active">M</button>
+      <button onclick="setSize('L', this)">L</button>
+      <button onclick="setSize('XL', this)">XL</button>
+    </div>
+
+    <button class="add" onclick="addToCart()">Add to Cart</button>
+
+    <!-- INSTAGRAM -->
+    <a href="https://www.instagram.com/vari7os/" target="_blank" class="ig-btn">
+      Order via Instagram
+    </a>
+
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart" id="cart">
+  <h2>Cart</h2>
+  <div id="cartItems"></div>
+  <p>Total: €<span id="total">0</span></p>
+  <button class="checkout" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+let selectedSize = "M";
+let cart = [];
+let price = 24.99;
+
+function showFront() {
+  document.getElementById("productImage").src = "front.png";
+}
+
+function showBack() {
+  document.getElementById("productImage").src = "back.png";
+}
+
+function setSize(size, btn) {
+  selectedSize = size;
+  document.querySelectorAll(".sizes button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function addToCart() {
+  cart.push({name:"Black Boxy Tee", size:selectedSize, qty:1, price:price});
+  updateCart();
+}
+
+function updateCart() {
+  let html = "";
+  let total = 0;
+  let count = 0;
+
+  cart.forEach((item,i)=>{
+    total += item.price * item.qty;
+    count += item.qty;
+
+    html += `<div class="item">
+      ${item.name} (${item.size}) x${item.qty}
+    </div>`;
+  });
+
+  document.getElementById("cartItems").innerHTML = html;
+  document.getElementById("total").innerText = total.toFixed(2);
+  document.getElementById("count").innerText = count;
+}
+
+function toggleCart() {
+  document.getElementById("cart").classList.toggle("open");
+}
+
+function checkout() {
+  if(cart.length === 0){
+    alert("Cart is empty");
+    return;
+  }
+
+  let msg = "Hi! I want to order:\n";
+  cart.forEach(item=>{
+    msg += `- ${item.name} (${item.size}) x${item.qty}\n`;
+  });
+
+  window.open("https://www.instagram.com/direct/new/?text=" + encodeURIComponent(msg));
+}
+</script>
+
+</body>
+</html>
